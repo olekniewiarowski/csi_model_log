@@ -1,0 +1,98 @@
+## Key Changes (high-level)
+
+- Column section assignments have been changed from an auto-select list (`A-LatCol`) to a specific wide-flange section (`W12X65`) at many locations.
+- A few column lines at specific stories remain assigned to `A-LatCol` instead of `W12X65`.
+- Beams, slabs, materials, section property definitions, load patterns, and load cases are unchanged.
+
+---
+
+## Materials
+
+- No material properties were added, removed, or modified.  
+  The `MATERIAL` blocks for `A992Fy50`, `4000Psi`, `A615Gr60`, and `A416Gr270` are identical.
+
+---
+
+## Sections
+
+- No frame, slab, deck, wall, tendon, or concrete section definitions were added, removed, or modified.  
+  All `FRAMESECTION`, `SHELLPROP`, `CONCRETESECTION`, `TENDONSECTION`, and `AUTOSECTION` blocks are identical.
+
+---
+
+## Loads and Load Combinations
+
+- Load patterns (`Dead`, `Live`) are unchanged.
+- Load cases (`Modal`, `Dead`, `Live`) are unchanged.
+- No load combinations are present in either file, so none were changed.
+
+---
+
+## Other Notable Changes
+
+### Column Line Assignments (LINEASSIGN – SECTION)
+
+In the OLD model, **all** column line assignments (`C1`–`C16` at all stories) used:
+- `SECTION "A-LatCol"`
+
+In the NEW model, many of these have been changed to:
+- `SECTION "W12X65"`
+
+Below is the precise change by line and story:
+
+#### Story4 – Columns
+
+- Changed from `A-LatCol` → `W12X65`:
+  - `C1`, `C2`, `C3`, `C5`, `C6`, `C7`, `C9`, `C10`, `C11`, `C13`, `C14`, `C15`
+- Remain `A-LatCol` (unchanged):
+  - `C4`, `C8`, `C12`, `C16`
+
+#### Story3 – Columns
+
+- Changed from `A-LatCol` → `W12X65`:
+  - `C1`, `C2`, `C3`, `C4`, `C5`, `C6`, `C7`, `C8`, `C9`, `C10`, `C11`, `C12`, `C13`, `C14`, `C15`, `C16`  
+  (i.e., all columns at Story3 now use `W12X65`.)
+
+#### Story2 – Columns
+
+- Changed from `A-LatCol` → `W12X65`:
+  - `C1`, `C2`, `C3`, `C4`, `C5`, `C6`, `C7`, `C8`, `C9`, `C10`, `C11`, `C12`, `C13`, `C14`, `C15`, `C16`  
+  (i.e., all columns at Story2 now use `W12X65`.)
+
+#### Story1 – Columns
+
+- Changed from `A-LatCol` → `W12X65`:
+  - `C1`, `C2`, `C3`, `C4`, `C6`, `C7`, `C8`, `C10`, `C11`, `C12`, `C13`, `C14`, `C15`, `C16`
+- Remain `A-LatCol` (unchanged):
+  - `C5`, `C9`
+
+### Beam Line Assignments
+
+- All beam line assignments (`B1`–`B24` with `SECTION "A-LatBm"` and `B25`–`B42` with `SECTION "A-CompBm"` and the same releases) are identical between OLD and NEW for all stories.
+
+### Geometry, Stories, Grids, Diaphragms, Slabs, Walls, Links, Panel Zones
+
+- Story definitions, grid systems, point coordinates, line/area connectivities, diaphragm definitions, slab/deck/wall/link/panel zone properties, and area assignments are unchanged.
+
+### Design Preferences and Analysis Options
+
+- Steel, concrete, composite beam, composite column, wall, and slab design preferences are unchanged.
+- Analysis options, mass source, and function/response spectrum definitions are unchanged.
+
+---
+
+## Machine Summary
+
+```json
+{
+  "materials_added": 0,
+  "materials_modified": 0,
+  "materials_removed": 0,
+  "sections_added": 0,
+  "sections_modified": 0,
+  "sections_removed": 0,
+  "loads_added": 0,
+  "loads_modified": 0,
+  "loads_removed": 0
+}
+```

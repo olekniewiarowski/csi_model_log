@@ -1,0 +1,62 @@
+## Key Changes (high-level)
+- Story definition changed from 5 stories (Story4–Base) to 3 stories (L3–Base) with different elevations/heights.
+- Explicit grid lines (A–D, 1–2) were added to grid system G1.
+- All materials, section properties, loads, and design preferences remain unchanged.
+
+## Materials
+- No materials added, modified, or removed.
+  - Material definitions for `A992Fy50`, `4000Psi`, `A615Gr60`, and `A416Gr270` are identical between OLD and NEW.
+
+## Sections
+- No frame, slab, deck, wall, tendon, link, panel zone, or concrete section properties were added, modified, or removed.
+  - All `FRAMESECTION`, `SHELLPROP`, `CONCRETESECTION`, `TENDONSECTION`, `LINKPROP`, and `PANELZONE` definitions are identical.
+  - All `AUTOSECTION` lists are identical.
+
+## Loads and Load Combinations
+- No changes to load patterns:
+  - `PT-FINAL`, `PT-TRANSFER`, `CLAD`, `D`, and `L` are identical.
+- No changes to load cases:
+  - `Modal`, `PT-FINAL`, `PT-TRANSFER`, `CLAD`, `PT-FINAL-HP`, `D`, and `L` are identical.
+- No load combinations are present in either file, so none were added/removed/modified.
+
+## Other Notable Changes
+- **Stories:**
+  - OLD:
+    - `Story4` HEIGHT 144 MASTERSTORY "Yes"
+    - `Story3` HEIGHT 144 SIMILARTO "Story4"
+    - `Story2` HEIGHT 144 SIMILARTO "Story4"
+    - `Story1` HEIGHT 144 SIMILARTO "Story4"
+    - `Base` ELEV 0
+  - NEW:
+    - `L3` HEIGHT 120
+    - `L2` HEIGHT 120
+    - `Base` ELEV 0
+  - Net effect: story names and vertical geometry have changed (fewer stories and reduced story heights).
+
+- **Grids:**
+  - OLD:
+    - Only grid system definition: `GRIDSYSTEM "G1"  TYPE "CARTESIAN"  BUBBLESIZE 60`
+  - NEW:
+    - Same grid system definition plus explicit grid lines:
+      - X-direction: A (0), B (84), C (252), D (420)
+      - Y-direction: 1 (48), 2 (224)
+  - Net effect: grid layout is now explicitly defined.
+
+- **Other model-wide settings:**
+  - Controls, diaphragms, analysis options, mass source, functions, design preferences (steel, concrete, composite, composite column, wall, slab), project info, and log are unchanged in their technical content (log only has additional entries reflecting the new saves).
+
+## Machine Summary
+
+```json
+{
+  "materials_added": 0,
+  "materials_modified": 0,
+  "materials_removed": 0,
+  "sections_added": 0,
+  "sections_modified": 0,
+  "sections_removed": 0,
+  "loads_added": 0,
+  "loads_modified": 0,
+  "loads_removed": 0
+}
+```
