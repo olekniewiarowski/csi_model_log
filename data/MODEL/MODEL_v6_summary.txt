@@ -1,0 +1,181 @@
+## Compared Model: MODEL_v6.$et  
+## Base Model: MODEL_v4.$et  
+
+## Key Changes (high-level)
+- Added multiple new points and area objects (walls, floors, and openings) to model slabs and walls explicitly.
+- Introduced wall panels with wall section assignments and new pier labels for wall design.
+- Added slab area assignments with stiffness modifiers, diaphragm assignment, and meshing controls.
+- Applied uniform gravity loads to one slab area (F2) in D and L load patterns.
+- Added steel design deflection overwrite parameters for all braces D1–D4 on L2 and L3.
+- Expanded group definitions to include new slab, wall, and opening area groups.
+
+---
+
+### Detailed Changes
+
+## Sections
+- **No changes** to material, frame, slab, deck, wall, tendon, or concrete section definitions:
+  - `$ MATERIAL PROPERTIES` blocks are identical.
+  - `$ FRAME SECTIONS`, `$ AUTO SELECT SECTION LISTS`, `$ CONCRETE SECTIONS`, `$ TENDON SECTIONS`, `$ SLAB PROPERTIES`, `$ DECK PROPERTIES`, `$ WALL PROPERTIES`, `$ LINK PROPERTIES`, and `$ PANEL ZONE PROPERTIES` are unchanged.
+
+---
+
+## Loads and Load Combinations
+
+### Load Patterns and Load Cases
+- **No changes** to:
+  - `$ LOAD PATTERNS`
+  - `$ LOAD CASES`
+  - `$ FUNCTIONS`
+  - `$ MASS SOURCE`
+  - `$ ANALYSIS OPTIONS`
+
+### New Shell (Area) Loads
+- Added uniform gravity loads on area **F2**:
+  - `AREALOAD  "F2"  "L3"  TYPE "UNIFF"  DIR "GRAV"  LC "D"  FVAL 0.3472222`
+  - `AREALOAD  "F2"  "L3"  TYPE "UNIFF"  DIR "GRAV"  LC "L"  FVAL 0.6944444`
+  - `AREALOAD  "F2"  "L2"  TYPE "UNIFF"  DIR "GRAV"  LC "D"  FVAL 0.2777778`
+  - `AREALOAD  "F2"  "L2"  TYPE "UNIFF"  DIR "GRAV"  LC "L"  FVAL 0.3472222`
+
+(There were no shell object loads in the old model.)
+
+---
+
+## Other Notable Changes
+
+### Geometry – Points and Areas
+
+**New points added in NEW model:**
+- `POINT "14"  0 176`
+- `POINT "15"  42 48 60`
+- `POINT "16"  420 0`
+- `POINT "17"  84 0`
+- `POINT "18"  42 224`
+- `POINT "19"  42 272`
+- `POINT "20"  420 272`
+- `POINT "21"  84 48 60`
+- `POINT "22"  0 0 60`
+- `POINT "23"  84 0 60`
+- `POINT "24"  319.2017 196.4256`
+- `POINT "25"  319.2017 136.4256`
+- `POINT "26"  259.2017 136.4256`
+- `POINT "27"  259.2017 196.4256`
+- `POINT "28"  84 160.9791 48`
+- `POINT "29"  84 111.0209 48`
+- `POINT "30"  84 111.0209 24`
+- `POINT "31"  84 160.9791 24`
+
+(Existing points 1–13 are unchanged.)
+
+**New area objects introduced (none existed in OLD):**
+- Wall panels:
+  - `AREA "W1"  PANEL  4  "10"  "5"  "5"  "10"  ...`
+  - `AREA "W2"  PANEL  4  "9"  "1"  "1"  "9"  ...`
+  - `AREA "W3"  PANEL  4  "9"  "9"  "1"  "1"  ...`
+  - `AREA "W4"  PANEL  4  "5"  "5"  "10"  "10"  ...`
+- Floor slabs:
+  - `AREA "F1"  FLOOR  4  "11"  "14"  "4"  "15"  ...`
+  - `AREA "F2"  FLOOR  8  "16"  "17"  "2"  "14"  "7"  "18"  "19"  "20"  ...`
+  - `AREA "F3"  FLOOR  4  "21"  "11"  "22"  "23"  ...`
+  - `AREA "F4"  FLOOR  4  "4"  "15"  "21"  "2"  ...`
+- Openings / auxiliary areas:
+  - `AREA "A1"  AREA  4  "24"  "25"  "26"  "27"  ...`
+  - `AREA "A2"  AREA  4  "26"  "25"  "24"  "27"  ...`
+  - `AREA "A3"  AREA  4  "28"  "29"  "30"  "31"  ...`
+  - `AREA "A4"  AREA  4  "29"  "28"  "31"  "30"  ...`
+
+### Pier / Spandrel Names
+- Existing:
+  - `PIERNAME  "P1"`
+- New pier names added:
+  - `PIERNAME  "P-W1-1"`
+  - `PIERNAME  "P-W2-2"`
+  - `PIERNAME  "P-W2-3"`
+  - `PIERNAME  "P-W1-4"`
+- Spandrel names unchanged (`SPANDRELNAME  "S1"`).
+
+### Area Assignments (Slabs, Openings, Walls)
+
+**New slab assignments (all new in NEW):**
+- All use section `"Slab1"` with modifiers and diaphragm `"D1"`:
+  - `AREAASSIGN  "F1"  "L2"  SECTION "Slab1"  PROPMODF11 0.35 ... DIAPH "D1" ...`
+  - `AREAASSIGN  "F2"  "L3"  SECTION "Slab1"  PROPMODF11 0.35 ... DIAPH "D1" ...`
+  - `AREAASSIGN  "F3"  "L2"  SECTION "Slab1"  PROPMODF11 0.35 ... DIAPH "D1" ...`
+  - `AREAASSIGN  "F3"  "L3"  SECTION "Slab1"  PROPMODF11 0.35 ... DIAPH "D1" ...`
+  - `AREAASSIGN  "F4"  "L3"  SECTION "Slab1"  PROPMODF11 0.35 ... DIAPH "D1" ...`
+  - `AREAASSIGN  "F4"  "L2"  SECTION "Slab1"  PROPMODF11 0.35 ... DIAPH "D1" ...`
+  - `AREAASSIGN  "F1"  "L3"  SECTION "Slab1"  PROPMODF11 0.35 ... DIAPH "D1" ...`
+  - `AREAASSIGN  "F2"  "L2"  SECTION "Slab1"  PROPMODF11 0.35 ... DIAPH "D1" ...`
+
+**New opening assignments:**
+- `AREAASSIGN  "A1"  "L3"  OPENING "Yes"`
+- `AREAASSIGN  "A2"  "L2"  OPENING "Yes"`
+- `AREAASSIGN  "A3"  "L2"  OPENING "Yes"`
+- `AREAASSIGN  "A4"  "L3"  OPENING "Yes"`
+
+**New wall area assignments with pier labels:**
+- `AREAASSIGN  "W1"  "L2"  SECTION "Wall1" ... PIER "P-W1-1" ...`
+- `AREAASSIGN  "W2"  "L2"  SECTION "Wall1" ... PIER "P-W2-2" ...`
+- `AREAASSIGN  "W3"  "L3"  SECTION "Wall1" ... PIER "P-W2-3" ...`
+- `AREAASSIGN  "W4"  "L3"  SECTION "Wall1" ... PIER "P-W1-4" ...`
+
+(There were no `$ AREA ASSIGNS` in the old model.)
+
+### Groups
+
+Existing groups **unchanged**:  
+- `"R1"`, `"R2"`, `"C1"`, `"C2"`, `"C3"`, `"C4"`, `"B1"`, `"S-BRACE*"` with the same point/line memberships.
+
+**New groups added:**
+- `GROUP "S2"` with slab areas:
+  - `AREA "F1"  "L2"`, `AREA "F3"  "L2"`, `AREA "F3"  "L3"`, `AREA "F4"  "L3"`, `AREA "F4"  "L2"`, `AREA "F1"  "L3"`
+- `GROUP "S1"`:
+  - `AREA "F2"  "L3"`, `AREA "F2"  "L2"`
+- `GROUP "S-S-OPEN*"`:
+  - `AREA "A1"  "L3"`, `AREA "A2"  "L2"`
+- `GROUP "S-W-OPEN*"`:
+  - `AREA "A3"  "L2"`, `AREA "A4"  "L3"`
+- `GROUP "W1"`:
+  - `AREA "W1"  "L2"`, `AREA "W4"  "L3"`
+- `GROUP "W2"`:
+  - `AREA "W2"  "L2"`, `AREA "W3"  "L3"`
+
+### Pier/Wall Modeling
+- Wall panels W1–W4 are now explicitly modeled and assigned to new pier names `P-W1-1`, `P-W2-2`, `P-W2-3`, `P-W1-4`, enabling wall design and pier force extraction.  
+- No wall areas or pier assignments existed in the old model.
+
+### Steel Design Overwrites
+- New `$ STEEL DESIGN OVERWRITES` block added for braces D1–D4 on L2 and L3:
+  - For each of D1, D2, D3, D4 on both `"L2"` and `"L3"`:
+    - `DLDEFLECTIONLIMITABS 1.220656`
+    - `SLDEFLECTIONLIMITABS 1.220656`
+    - `LLDEFLECTIONLIMITABS 0.4068852`
+    - `TLDEFLECTIONLIMITABS 0.6103278`
+    - `TLMCDEFLECTIONLIMITABS 0.6103278`
+- No steel design overwrites were present in the old model.
+
+### Unchanged Items
+- `$ CONTROLS`, `$ STORIES`, `$ GRIDS`, `$ DIAPHRAGM NAMES`, `$ LINE CONNECTIVITIES`, `$ GROUPS` for lines/points, `$ POINT ASSIGNS`, `$ LINE ASSIGNS`, `$ STEEL DESIGN PREFERENCES`, `$ CONCRETE DESIGN PREFERENCES`, `$ COMPOSITE DESIGN PREFERENCES`, `$ COMPOSITE COLUMN DESIGN PREFERENCES`, `$ WALL DESIGN PREFERENCES`, `$ CONCRETE SLAB DESIGN PREFERENCES`, and `$ PROJECT INFORMATION` are identical between versions.
+
+---
+
+## Materials
+- No materials added, modified, or removed.
+
+---
+
+## Machine Summary
+
+```json
+{
+  "materials_added": 0,
+  "materials_modified": 0,
+  "materials_removed": 0,
+  "sections_added": 0,
+  "sections_modified": 0,
+  "sections_removed": 0,
+  "loads_added": 4,
+  "loads_modified": 0,
+  "loads_removed": 0
+}
+```

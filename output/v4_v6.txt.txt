@@ -1,0 +1,163 @@
+## Compared Model: MODEL_v6.$et  
+## Base Model: MODEL_v4.$et  
+
+## Key Changes (high-level)
+- Added wall and floor/roof shell objects (areas), with slab and wall property assignments.
+- Added wall pier labels and associated wall groups.
+- Added shell (area) gravity loads on slab F2.
+- Added steel design overwrite data for braces D1–D4.
+- Added several new points to support the new areas.
+- Added slab opening areas and associated groups.
+
+---
+
+### Detailed Changes
+
+## Sections
+- **No material or section property definitions changed**  
+  - `$ MATERIAL PROPERTIES`, `$ FRAME SECTIONS`, `$ SLAB PROPERTIES`, `$ DECK PROPERTIES`, `$ WALL PROPERTIES`, `$ LINK PROPERTIES`, `$ CONCRETE SECTIONS`, `$ TENDON SECTIONS` are identical between versions.
+
+---
+
+## Loads and Load Combinations
+
+### Load Patterns / Load Cases
+- **No changes** to:
+  - `$ LOAD PATTERNS`
+  - `$ LOAD CASES`
+
+### Shell (Area) Loads
+- **New shell gravity loads added** on slab area `F2`:
+  - `AREALOAD  "F2"  "L3"  TYPE "UNIFF"  DIR "GRAV"  LC "D"  FVAL 0.3472222`
+  - `AREALOAD  "F2"  "L3"  TYPE "UNIFF"  DIR "GRAV"  LC "L"  FVAL 0.6944444`
+  - `AREALOAD  "F2"  "L2"  TYPE "UNIFF"  DIR "GRAV"  LC "D"  FVAL 0.2777778`
+  - `AREALOAD  "F2"  "L2"  TYPE "UNIFF"  DIR "GRAV"  LC "L"  FVAL 0.3472222`
+
+### Steel Design Overwrites
+- **New steel design overwrite data** for braces `D1–D4` at both `L2` and `L3`:
+  - `STEELDATA` entries added specifying absolute deflection limits:
+    - For each of `D1`, `D2`, `D3`, `D4` at `L2` and `L3`:
+      - `DLDEFLECTIONLIMITABS 1.220656`
+      - `SLDEFLECTIONLIMITABS 1.220656`
+      - `LLDEFLECTIONLIMITABS 0.4068852`
+      - `TLDEFLECTIONLIMITABS 0.6103278`
+      - `TLMCDEFLECTIONLIMITABS 0.6103278`
+
+---
+
+## Other Notable Changes
+
+### Pier / Spandrel Names
+- **New pier names added**:
+  - `P-W1-1`
+  - `P-W2-2`
+  - `P-W2-3`
+  - `P-W1-4`
+- Existing:
+  - `PIERNAME "P1"` (unchanged)
+  - `SPANDRELNAME "S1"` (unchanged)
+
+### Point Coordinates
+- **New points added** in the NEW model (OLD had only points 1–13):
+  - `POINT "14"  0 176`
+  - `POINT "15"  42 48 60`
+  - `POINT "16"  420 0`
+  - `POINT "17"  84 0`
+  - `POINT "18"  42 224`
+  - `POINT "19"  42 272`
+  - `POINT "20"  420 272`
+  - `POINT "21"  84 48 60`
+  - `POINT "22"  0 0 60`
+  - `POINT "23"  84 0 60`
+  - `POINT "24"  319.2017 196.4256`
+  - `POINT "25"  319.2017 136.4256`
+  - `POINT "26"  259.2017 136.4256`
+  - `POINT "27"  259.2017 196.4256`
+  - `POINT "28"  84 160.9791 48`
+  - `POINT "29"  84 111.0209 48`
+  - `POINT "30"  84 111.0209 24`
+  - `POINT "31"  84 160.9791 24`
+
+### Area (Shell) Objects
+- **New wall panel areas**:
+  - `AREA "W1"  PANEL  4  "10"  "5"  "5"  "10"  ...`
+  - `AREA "W2"  PANEL  4  "9"  "1"  "1"  "9"  ...`
+  - `AREA "W3"  PANEL  4  "9"  "9"  "1"  "1"  ...`
+  - `AREA "W4"  PANEL  4  "5"  "5"  "10"  "10"  ...`
+- **New floor/roof slab areas**:
+  - `AREA "F1"  FLOOR  4  "11"  "14"  "4"  "15"  ...`
+  - `AREA "F2"  FLOOR  8  "16"  "17"  "2"  "14"  "7"  "18"  "19"  "20"  ...`
+  - `AREA "F3"  FLOOR  4  "21"  "11"  "22"  "23"  ...`
+  - `AREA "F4"  FLOOR  4  "4"  "15"  "21"  "2"  ...`
+- **New opening areas**:
+  - `AREA "A1"  AREA  4  "24"  "25"  "26"  "27"  ...`
+  - `AREA "A2"  AREA  4  "26"  "25"  "24"  "27"  ...`
+  - `AREA "A3"  AREA  4  "28"  "29"  "30"  "31"  ...`
+  - `AREA "A4"  AREA  4  "29"  "28"  "31"  "30"  ...`
+
+### Area Assignments
+- **New slab assignments** (all using `SECTION "Slab1"` with stiffness modifiers 0.35 and diaphragm `D1`):
+  - `AREAASSIGN  "F1"  "L2"` and `"L3"`
+  - `AREAASSIGN  "F2"  "L2"` and `"L3"`
+  - `AREAASSIGN  "F3"  "L2"` and `"L3"`
+  - `AREAASSIGN  "F4"  "L2"` and `"L3"`
+- **New opening assignments**:
+  - `AREAASSIGN  "A1"  "L3"  OPENING "Yes"`
+  - `AREAASSIGN  "A2"  "L2"  OPENING "Yes"`
+  - `AREAASSIGN  "A3"  "L2"  OPENING "Yes"`
+  - `AREAASSIGN  "A4"  "L3"  OPENING "Yes"`
+- **New wall assignments with pier labels** (all using `SECTION "Wall1"` with stiffness modifiers 0.7):
+  - `AREAASSIGN  "W1"  "L2"  ... PIER  "P-W1-1"`
+  - `AREAASSIGN  "W2"  "L2"  ... PIER  "P-W2-2"`
+  - `AREAASSIGN  "W3"  "L3"  ... PIER  "P-W2-3"`
+  - `AREAASSIGN  "W4"  "L3"  ... PIER  "P-W1-4"`
+
+### Groups
+- Existing groups `R1`, `R2`, `C1–C4`, `B1`, `S-BRACE*` remain, with identical line/point memberships.
+- **New slab groups**:
+  - `GROUP "S2"` with areas:
+    - `"F1"` at `L2` and `L3`
+    - `"F3"` at `L2` and `L3`
+    - `"F4"` at `L2` and `L3`
+  - `GROUP "S1"` with area:
+    - `"F2"` at `L2` and `L3`
+- **New opening groups**:
+  - `GROUP "S-S-OPEN*"`:
+    - `"A1"` at `L3`
+    - `"A2"` at `L2`
+  - `GROUP "S-W-OPEN*"`:
+    - `"A3"` at `L2`
+    - `"A4"` at `L3`
+- **New wall groups**:
+  - `GROUP "W1"`:
+    - `"W1"` at `L2`
+    - `"W4"` at `L3`
+  - `GROUP "W2"`:
+    - `"W2"` at `L2`
+    - `"W3"` at `L3`
+
+### Frame / Point / Line Assignments
+- `$ POINT ASSIGNS` and `$ LINE ASSIGNS` blocks are **unchanged** between OLD and NEW.
+
+---
+
+## Materials
+- **No materials added, modified, or removed.**
+
+---
+
+## Machine Summary
+
+```json
+{
+  "materials_added": 0,
+  "materials_modified": 0,
+  "materials_removed": 0,
+  "sections_added": 0,
+  "sections_modified": 0,
+  "sections_removed": 0,
+  "loads_added": 8,
+  "loads_modified": 0,
+  "loads_removed": 0
+}
+```

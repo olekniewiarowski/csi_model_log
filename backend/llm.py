@@ -63,9 +63,17 @@ def read_text_file(path: str) -> str:
     """
     with open(path, "r", encoding="utf-8", errors="ignore") as f:
         return f.read()
+    
+def get_filename(path: str) -> str:
+    """
+    Extract the filename from a given file path.
+    """
+    return os.path.basename(path)
 
 
 def build_prompt(
+    old_model_path: str,
+    new_model_path: str,
     old_text: str,
     new_text: str,
     project_name: Optional[str] = None,
@@ -80,6 +88,8 @@ def build_prompt(
         "You compare two ETABS model text exports and produce a precise, "
         "concise change log. You MUST only describe differences that are "
         "actually present between the two versions."
+        "You MUST NOT invent any changes or guess about unclear items. "
+        "You can understand the relation between Grid Lines, Levels, and structural elements. "
     )
 
     # Keep user prompt as instructions + raw texts
@@ -106,10 +116,22 @@ def build_prompt(
              - Load combinations
              - Any other clearly represented ETABS definitions.
 
+        You should identify relationships such as the grid location of elements, points, slabs and levels
+
+
         2. Produce a human-readable summary in MARKDOWN with this structure:
 
+           ## Compared Model: {get_filename(new_model_path)}
+
+           ## Base Model: {get_filename(old_model_path)}
+
            ## Key Changes (high-level)
-           - Short bullet list summarizing the main types of changes.
+           - Short bullet list summarizing the main types of changes, by providing more context with relevant features.
+           - while describing the changes, describe the location of the change in terms of grid lines, levels, and element types.
+           example: "Changed column on L2 at Grid-Line A-1 from W12x50 to W14x65."
+           example: "Added new load combination 'Wind-2' with 0.3*WindX + 0.3*WindY."
+
+           ### Detailed Changes
 
            ## Materials
            - Bullet points for added/removed/modified materials (if any).
@@ -141,6 +163,7 @@ def build_prompt(
            ```
 
            If a category is not mentioned in the diff, use 0 for those counts.
+           Reformat the markdown to sort the changes by most changes to least changes.
 
         Rules:
         - Do NOT invent any changes that you cannot directly infer from the two texts.
@@ -236,7 +259,7 @@ def analyze_models(
 
     new_text = read_text_file(new_model_path)
 
-    prompt = build_prompt(old_text, new_text, project_name=project_name)
+    prompt = build_prompt(old_model_path, new_model_path, old_text, new_text, project_name=project_name)
 
     client = get_client()
     markdown = call_llm(
