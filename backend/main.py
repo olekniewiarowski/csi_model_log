@@ -27,6 +27,7 @@ import argparse
 import json
 import os
 import subprocess
+import sys
 import textwrap
 from pathlib import Path
 from typing import Optional, Dict, Any, List, Tuple
@@ -368,25 +369,13 @@ def write_outputs(result: Dict[str, Any]) -> None:
     print(f"[LLM] Wrote stats json:    {stats_path}")
 
 
-def run_streamlit(app_path: str) -> None:
-    """
-    Launch the Streamlit frontend server in a separate process.
-
-    This is non-blocking: it spawns the process and returns.
-    """
-    app_full = PROJECT_ROOT / app_path
-    if not app_full.is_file():
-        print(f"[LLM] Streamlit app not found at {app_full}. Skipping launch.")
-        return
-
-    try:
-        subprocess.Popen(
-            ["streamlit", "run", str(app_full)],
-            shell=False,
-        )
-        print(f"[LLM] Launched Streamlit app: {app_full}")
-    except FileNotFoundError:
-        print("[LLM] Could not start Streamlit: 'streamlit' command not found.")
+def run_streamlit(target_dir):
+    # Run: streamlit run str_main.py -- --target_dir <target_dir>
+    cmd = [
+        "streamlit", "run", "backend\str_main.py", target_dir
+    ]
+    
+    subprocess.run(cmd)
 
 
 # ----------------- CLI ENTRYPOINT ----------------- #
@@ -415,9 +404,9 @@ def main():
     )
     parser.add_argument(
         "--ext",
-        default=".$et,.et,.txt",
+        default=".$et,.et,.txt,.e2k",
         help="Comma-separated list of allowed file extensions "
-             "(default: '.$et,.et,.txt').",
+             "(default: '.$et,.et,.txt,.e2k').",
     )
     parser.add_argument(
         "--streamlit-app",
@@ -452,7 +441,7 @@ def main():
     write_outputs(result)
 
     if not args.no_streamlit:
-        run_streamlit(args.streamlit_app)
+        run_streamlit(args.target_dir)
 
 
 if __name__ == "__main__":
